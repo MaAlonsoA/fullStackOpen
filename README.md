@@ -8,7 +8,7 @@ This project contains the exercises corresponding to *[Full Stack open 2021](htt
 
     4. [New Note Diagram](https://github.com/MaAlonsoA/fullStackOpen/blob/master/part0/0.4%20New%20Note.md)
 
-    2. [Render SPA Diagram](https://github.com/MaAlonsoA/fullStackOpen/blob/master/part0/0.5%20SPA.md)
+    5. [Render SPA Diagram](https://github.com/MaAlonsoA/fullStackOpen/blob/master/part0/0.5%20SPA.md)
 
-    3. [New Note SPA Diagram](https://github.com/MaAlonsoA/fullStackOpen/blob/master/part0/0.6%20New%20Note%20SPA.md)
+    6. [New Note SPA Diagram](https://github.com/MaAlonsoA/fullStackOpen/blob/master/part0/0.6%20New%20Note%20SPA.md)
 
