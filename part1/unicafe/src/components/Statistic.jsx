@@ -3,15 +3,17 @@ import React from "react";
 const Statistic = ({ text, value }) => {
 	if (text !== "Positive") {
 		return (
-			<p>
-				{text} {value}
-			</p>
+			<>
+				<td>{text}</td>
+				<td>{value}</td>
+			</>
 		);
 	} else {
 		return (
-			<p>
-				{text} {value}%
-			</p>
+			<>
+				<td>{text}</td>
+				<td>{value}%</td>
+			</>
 		);
 	}
 };
