@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import Button from "./Button";
+import Statistics from "./Statistics";
 
 const App = () => {
 	const [good, setGood] = useState(0);
@@ -26,28 +27,44 @@ const App = () => {
 		<div
 			style={{
 				position: "absolute",
-				left: "50%",
-				top: "50%",
+				marginLeft: "50%",
+				width: "300px",
+				height: "100px",
 			}}
 		>
+			<h1>Rate us!</h1>
 			<Button
-				style={{ fontSize: "25px", margin: '0.5em', padding: '15px'}}
+				style={{
+					fontSize: "12px",
+					width: "100px",
+					height: "100px",
+					backgroundColor: "#88FF82",
+				}}
 				name="GOOD"
 				onClick={increaseGood}
-				value={good}
 			/>
 			<Button
-				style={{ fontSize: "25px", margin: '0.5em', padding: '15px'}}
+				style={{
+					fontSize: "12px",
+					width: "100px",
+					height: "100px",
+					backgroundColor: "#C4C2C5",
+				}}
 				name="NEUTRAL"
 				onClick={increaseNeutral}
-				value={neutral}
 			/>
 			<Button
-				style={{ fontSize: "25px", margin: '0.5em', padding: '15px'}}
+				style={{
+					fontSize: "12px",
+					width: "100px",
+					height: "100px",
+					backgroundColor: "#FF4242",
+				}}
 				name="BAD"
 				onClick={increaseBad}
-				value={bad}
 			/>
+
+			<Statistics good={good} neutral={neutral} bad={bad} />
 		</div>
 	);
 };
