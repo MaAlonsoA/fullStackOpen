@@ -1,19 +1,21 @@
 import React from "react";
+import Statistic from "./Statistic";
 
 const Statistics = ({ good, neutral, bad }) => {
 	const total = good + neutral + bad;
 
 	if (total > 0) {
 		const average = (good * 1 + bad * -1) / total;
+		const positivePercet = good / total;
 		return (
 			<div>
 				<h1>Statistics</h1>
-				<p>Good: {good}</p>
-				<p>Neutral: {neutral}</p>
-				<p>Bad: {bad}</p>
-				<p>Total: {total}</p>
-				<p>Average: {average} </p>
-				<p>Positive: {good / total}%</p>
+				<Statistic text={"Good"} value={good} />
+				<Statistic text={"Neutral"} value={neutral} />
+				<Statistic text={"Bad"} value={bad} />
+				<Statistic text={"Total"} value={total} />
+				<Statistic text={"Average"} value={average} />
+				<Statistic text={"Positive"} value={positivePercet}/>
 			</div>
 		);
 	} else {
