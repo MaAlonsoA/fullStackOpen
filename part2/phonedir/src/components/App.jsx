@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Person } from "./Person";
+import { Persons } from "./Persons";
 import { Filter } from "./Filter";
 import { Form } from "./Form";
 
@@ -58,11 +58,7 @@ export const App = () => {
 			<h2>Add new </h2>
 			<Form handleSubmit={handleSubmit} handleChange={handleChange} />
 			<h2>Numbers</h2>
-			{personsToShow.map((person) => {
-				return (
-					<Person key={person.name} name={person.name} phone={person.number} />
-				);
-			})}
+			<Persons personsToShow={personsToShow} />
 		</div>
 	);
 };
