@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import { getAllPersons } from "../services/persons/getAllPersons";
+
 import { Persons } from "./Persons";
 import { Filter } from "./Filter";
 import { Form } from "./Form";
 
 export const App = () => {
-	const [persons, setPersons] = useState([
-		{ name: "Arto Hellas", number: "040-123456" },
-		{ name: "Ada Lovelace", number: "39-44-5323523" },
-		{ name: "Dan Abramov", number: "12-43-234345" },
-		{ name: "Mary Poppendieck", number: "39-23-6423122" },
-	]);
+	const [persons, setPersons] = useState([]);
 	const [newEntry, setNewEntry] = useState();
 	const [search, setSearch] = useState("");
+
+	useEffect(() => {
+		getAllPersons().then((persons) => {
+			setPersons(persons);
+		});
+	}, []);
 
 	const handleChange = (event) => {
 		setNewEntry({
