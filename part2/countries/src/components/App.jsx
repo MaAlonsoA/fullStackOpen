@@ -9,7 +9,6 @@ export const App = () => {
 	const [search, setSearch] = useState("");
 
 	useEffect(() => {
-		console.log(process.env.REACT_APP_API_KEY);
 		getAllCountries().then((getCountries) => {
 			setCountries(getCountries);
 		});
