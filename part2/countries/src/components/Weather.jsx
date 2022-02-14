@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
+import { getWeather } from "../services/getWeather";
 
 export const Weather = ({ capital }) => {
 	const [weather, setWeather] = useState([]);
 
 	useEffect(() => {
-		const params = {
-			access_key: process.env.REACT_APP_API_KEY,
-			query: capital,
-		};
-		axios
-			.get(
-				`http://api.weatherstack.com/current?access_key=${params.access_key}&query=${params.query}`
-			)
-			.then((response) => {
-				const { data } = response;
-				setWeather([data]);
-			});
-	}, [capital]);
-	if (weather[0]) {
+		getWeather(capital).then((response) => {
+			if (response.success === false) {
+				return;
+			}
+			setWeather([response]);
+		});
+	}, [setWeather, capital]);
+
+	if (weather.length > 0) {
 		return (
 			<div>
 				<p>Temperature {weather[0].current.temperature}</p>
