@@ -5,9 +5,5 @@ export const deletePersonById = (id) => {
 		.delete(`http://localhost:3001/persons/${id}`)
 		.then((response) => {
 			return response;
-		})
-		.catch((error) => {
-			console.error(error);
-			alert(error);
 		});
 };

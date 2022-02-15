@@ -6,9 +6,5 @@ export const postNewPerson = (newPerson) => {
 		.then((response) => {
 			const { data } = response;
 			return data;
-		})
-		.catch((error) => {
-			console.error(error);
-			alert(error);
 		});
 };

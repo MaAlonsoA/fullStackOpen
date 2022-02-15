@@ -6,9 +6,5 @@ export const putPersonById = (id, updatedPerson) => {
 		.then((response) => {
 			const { data } = response;
 			return data;
-		})
-		.catch((error) => {
-			console.error(error);
-			alert(error);
 		});
 };

@@ -8,17 +8,36 @@ import { putPersonById } from "../services/persons/putPersonById";
 import { Persons } from "./Persons";
 import { Filter } from "./Filter";
 import { Form } from "./Form";
+import { Notification } from "./Notification";
 
 export const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newEntry, setNewEntry] = useState();
 	const [search, setSearch] = useState("");
+	const [errorMessage, setErrorMessage] = useState({ type: "", message: "" });
 
 	useEffect(() => {
-		getAllPersons().then((persons) => {
-			setPersons(persons);
-		});
+		getAllPersons()
+			.then((persons) => {
+				setPersons(persons);
+			})
+			.catch((e) => {
+				messageHandler("error", e.message, 3000);
+			});
 	}, []);
+
+	const messageHandler = (type, message, time = 3000) => {
+		setErrorMessage({
+			type,
+			message,
+		});
+		setTimeout(() => {
+			setErrorMessage({
+				type: "",
+				message: "",
+			});
+		}, time);
+	};
 
 	const handleChange = (event) => {
 		setNewEntry({
@@ -47,11 +66,24 @@ export const App = () => {
 					`${newEntry.name} already exist, replace the old number with a new one`
 				)
 			) {
-				return putPersonById(finded.id, newEntry).then(() => {
-					getAllPersons().then((response) => {
-						setPersons(response);
+				return putPersonById(finded.id, newEntry)
+					.then(() => {
+						getAllPersons()
+							.then((response) => {
+								messageHandler(
+									"success",
+									`${finded.name} was successfully updated `,
+									5000
+								);
+								setPersons(response);
+							})
+							.catch((e) => {
+								messageHandler("error", e.message);
+							});
+					})
+					.catch((e) => {
+						messageHandler("error", `${finded.name} was already deleted `);
 					});
-				});
 			}
 			return;
 		}
@@ -70,11 +102,24 @@ export const App = () => {
 
 	const handleDelete = (id, name) => {
 		if (window.confirm(`Delete ${name}`)) {
-			deletePersonById(id).then(() => {
-				getAllPersons().then((persons) => {
-					setPersons(persons);
+			deletePersonById(id)
+				.then(() => {
+					getAllPersons()
+						.then((persons) => {
+							setPersons(persons);
+							messageHandler(
+								"success",
+								`${name} was successfully deleted `,
+								5000
+							);
+						})
+						.catch((e) => {
+							messageHandler("error", e.message);
+						});
+				})
+				.catch((e) => {
+					messageHandler("error", e.message, 3000);
 				});
-			});
 		}
 	};
 
@@ -86,6 +131,9 @@ export const App = () => {
 
 	return (
 		<div>
+			{!errorMessage.type ? null : (
+				<Notification type={errorMessage.type} message={errorMessage.message} />
+			)}
 			<h2>Phonebook</h2>
 			<Filter handleSearch={handleSearch} />
 			<h2>Add new </h2>
