@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getAllPersons = () => {
+export const postNewPerson = (newPerson) => {
 	return axios
-		.get("http://localhost:3001/persons")
+		.post("http://localhost:3001/persons", newPerson)
 		.then((response) => {
 			const { data } = response;
 			return data;

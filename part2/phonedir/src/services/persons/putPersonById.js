@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getAllPersons = () => {
+export const putPersonById = (id, updatedPerson) => {
 	return axios
-		.get("http://localhost:3001/persons")
+		.put(`http://localhost:3001/persons/${id}`, updatedPerson)
 		.then((response) => {
 			const { data } = response;
 			return data;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { getAllPersons } from "../services/persons/getAllPersons";
+import { postNewPerson } from "../services/persons/postNewPerson";
 
 import { Persons } from "./Persons";
 import { Filter } from "./Filter";
@@ -39,8 +40,10 @@ export const App = () => {
 			return window.alert(`${newEntry} is already on the phonebook`);
 		}
 
-		setPersons(persons.concat(newEntry));
-
+		postNewPerson(newEntry).then((response) => {
+			setPersons(persons.concat(response));
+			setNewEntry();
+		});
 		event.target.reset();
 		setNewEntry();
 	};
