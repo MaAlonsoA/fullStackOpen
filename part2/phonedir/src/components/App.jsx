@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import { getAllPersons } from "../services/persons/getAllPersons";
 import { postNewPerson } from "../services/persons/postNewPerson";
+import { deletePersonById } from "../services/persons/deletePersonById";
+import { putPersonById } from "../services/persons/putPersonById";
 
 import { Persons } from "./Persons";
 import { Filter } from "./Filter";
@@ -37,7 +39,21 @@ export const App = () => {
 				return elem.name === newEntry.name;
 			})
 		) {
-			return window.alert(`${newEntry} is already on the phonebook`);
+			const finded = persons.find((elem) => {
+				return elem.name === newEntry.name;
+			});
+			if (
+				window.confirm(
+					`${newEntry.name} already exist, replace the old number with a new one`
+				)
+			) {
+				return putPersonById(finded.id, newEntry).then(() => {
+					getAllPersons().then((response) => {
+						setPersons(response);
+					});
+				});
+			}
+			return;
 		}
 
 		postNewPerson(newEntry).then((response) => {
@@ -50,6 +66,16 @@ export const App = () => {
 
 	const handleSearch = (event) => {
 		setSearch(event.target.value);
+	};
+
+	const handleDelete = (id, name) => {
+		if (window.confirm(`Delete ${name}`)) {
+			deletePersonById(id).then(() => {
+				getAllPersons().then((persons) => {
+					setPersons(persons);
+				});
+			});
+		}
 	};
 
 	const personsToShow = search
@@ -65,7 +91,7 @@ export const App = () => {
 			<h2>Add new </h2>
 			<Form handleSubmit={handleSubmit} handleChange={handleChange} />
 			<h2>Numbers</h2>
-			<Persons personsToShow={personsToShow} />
+			<Persons personsToShow={personsToShow} handleDelete={handleDelete} />
 		</div>
 	);
 };
