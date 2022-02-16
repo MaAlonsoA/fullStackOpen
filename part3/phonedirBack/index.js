@@ -2,6 +2,8 @@ import express from 'express';
 
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     name: 'Ada Lovelace',
@@ -43,6 +45,19 @@ app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter((person) => person.id !== id);
   res.status(204).end();
+});
+
+app.post('/api/persons', (req, res) => {
+  const ids = persons.map((person) => person.id);
+  const maxId = Math.max(...ids);
+  const { body } = req;
+  const newPerson = {
+    name: body.name,
+    number: body.number,
+    id: maxId + 1,
+  };
+  persons = persons.concat(newPerson);
+  res.json(newPerson);
 });
 
 app.get('/info', (req, res) => {
