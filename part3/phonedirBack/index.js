@@ -48,16 +48,21 @@ app.delete('/api/persons/:id', (req, res) => {
 });
 
 app.post('/api/persons', (req, res) => {
-  const ids = persons.map((person) => person.id);
-  const maxId = Math.max(...ids);
   const { body } = req;
-  const newPerson = {
-    name: body.name,
-    number: body.number,
-    id: maxId + 1,
-  };
-  persons = persons.concat(newPerson);
-  res.json(newPerson);
+  if (!body.name || !body.number || persons.some((elem) => elem.name === body.name)) {
+    res.status(400).json();
+  } else {
+    const ids = persons.map((person) => person.id);
+    const maxId = Math.max(...ids);
+
+    const newPerson = {
+      name: body.name,
+      number: body.number,
+      id: maxId + 1,
+    };
+    persons = persons.concat(newPerson);
+    res.json(newPerson);
+  }
 });
 
 app.get('/info', (req, res) => {
