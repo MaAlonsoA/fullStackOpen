@@ -6,27 +6,37 @@ const persons = [
   {
     name: 'Ada Lovelace',
     number: '39-44-5323523',
-    id: 2,
+    id: 1,
   },
   {
     name: 'Dan Abramov',
     number: '12-43-234345',
-    id: 3,
+    id: 2,
   },
   {
     name: 'Mary Poppendieck',
     number: '39-23-6423122',
-    id: 4,
+    id: 3,
   },
   {
     name: 'Marcos',
     number: '23123123',
-    id: 5,
+    id: 4,
   },
 ];
 
 app.get('/api/persons', (req, res) => {
   res.json(persons);
+});
+
+app.get('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const data = persons.find((person) => person.id === id);
+  if (data) {
+    res.json(data);
+  } else {
+    res.status(404).json();
+  }
 });
 
 app.get('/info', (req, res) => {
