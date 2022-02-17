@@ -6,6 +6,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static('build'));
+
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
@@ -24,11 +26,6 @@ let persons = [
     name: 'Mary Poppendieck',
     number: '39-23-6423122',
     id: 3,
-  },
-  {
-    name: 'Marcos',
-    number: '23123123',
-    id: 4,
   },
 ];
 
@@ -73,6 +70,23 @@ app.post('/api/persons', (req, res) => {
 app.get('/info', (req, res) => {
   res.send(`<p>Phonebook has info for ${persons.length}<p>
   <p>${new Date()}</p>`);
+});
+
+app.put('/api/persons/:id', (req, res) => {
+  const { body } = req;
+
+  const id = Number(req.params.id);
+  const index = persons.findIndex((elem) => elem.id === id);
+  if (index >= 0) {
+    persons[index] = {
+      name: body.name,
+      number: body.number,
+      id: req.params.id,
+    };
+  } else {
+    res.status(404).json();
+  }
+  res.status(200).end();
 });
 
 const PORT = process.env.PORT || 3001;
