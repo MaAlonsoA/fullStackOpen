@@ -1,6 +1,18 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import mongoose from 'mongoose';
+
+import 'dotenv/config';
+import Person from './models/Person.js';
+
+mongoose.connect(process.env.MONGO_DB_URI)
+  .then((result) => {
+    console.log('connected to MongoDB', result.connections[0].name);
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message);
+  });
 
 const app = express();
 
@@ -11,82 +23,56 @@ app.use(express.static('build'));
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
-let persons = [
-  {
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-    id: 1,
-  },
-  {
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-    id: 2,
-  },
-  {
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-    id: 3,
-  },
-];
-
-app.get('/api/persons', (req, res) => {
-  res.json(persons);
+app.get('/api/persons', (request, response, next) => {
+  Person.find({}).then((person) => {
+    response.json(person);
+  }).catch((error) => next(error));
 });
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const data = persons.find((person) => person.id === id);
-  if (data) {
-    res.json(data);
-  } else {
-    res.status(404).json();
-  }
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id).then((person) => {
+    if (person) {
+      return response.json(person);
+    }
+    return response.status(404).end();
+  }).catch((error) => next(error));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter((person) => person.id !== id);
-  res.status(204).end();
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id).then(() => {
+    response.status(204).end();
+  }).catch((error) => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
-  const { body } = req;
-  if (!body.name || !body.number || persons.some((elem) => elem.name === body.name)) {
-    res.status(400).json();
-  } else {
-    const ids = persons.map((person) => person.id);
-    const maxId = Math.max(...ids);
+app.post('/api/persons', (request, response, next) => {
+  const { body } = request;
+  const newPerson = new Person({
+    name: body.name,
+    phoneNumber: body.phoneNumber,
+  });
 
-    const newPerson = {
-      name: body.name,
-      number: body.number,
-      id: maxId + 1,
-    };
-    persons = persons.concat(newPerson);
-    res.json(newPerson);
-  }
+  newPerson.save().then((savedPerson) => {
+    response.json(savedPerson);
+  }).catch((error) => next(error));
 });
 
-app.get('/info', (req, res) => {
-  res.send(`<p>Phonebook has info for ${persons.length}<p>
-  <p>${new Date()}</p>`);
+app.put('/api/persons/:id', (request, response, next) => {
+  const { body } = request;
+  const newPersonInfo = {
+    name: body.name,
+    phoneNumber: body.phoneNumber,
+  };
+  Person.findByIdAndUpdate(request.params.id, newPersonInfo).then(() => {
+    response.status(200).end();
+  }).catch((error) => next(error));
 });
 
-app.put('/api/persons/:id', (req, res) => {
-  const { body } = req;
+app.use((error, request, response, next) => {
+  response.status(400).end();
+});
 
-  const id = Number(req.params.id);
-  const index = persons.findIndex((elem) => elem.id === id);
-  if (index >= 0) {
-    persons[index] = {
-      name: body.name,
-      number: body.number,
-      id: req.params.id,
-    };
-  } else {
-    res.status(404).json();
-  }
-  res.status(200).end();
+app.use((request, response) => {
+  response.status(404).end();
 });
 
 const PORT = process.env.PORT || 3001;

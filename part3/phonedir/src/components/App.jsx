@@ -49,7 +49,7 @@ export const App = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		if (!newEntry || !newEntry.name || !newEntry.number) {
+		if (!newEntry || !newEntry.name || !newEntry.phoneNumber) {
 			return window.alert("Enter values");
 		}
 

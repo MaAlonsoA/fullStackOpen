@@ -8,7 +8,7 @@ export const Form = ({ handleSubmit, handleChange }) => {
 					<input placeholder="Name" name="name" onChange={handleChange} />
 				</div>
 				<div>
-					<input placeholder="Number" name="number" onChange={handleChange} />
+					<input placeholder="Number" name="phoneNumber" onChange={handleChange} />
 				</div>
 				<div>
 					<button type="submit">add</button>
