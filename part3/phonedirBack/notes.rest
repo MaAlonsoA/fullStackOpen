@@ -9,10 +9,10 @@ GET http://localhost:3001/api/persons/1
 DELETE http://localhost:3001/api/persons/6
 
 ###
-POST https://infinite-refuge-78583.herokuapp.com/api/persons
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Perro Sanche",
-    "number": "666"
+    "name": "Pedro",
+    "phoneNumber": 42212313
 }

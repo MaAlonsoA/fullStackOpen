@@ -68,7 +68,14 @@ app.put('/api/persons/:id', (request, response, next) => {
 });
 
 app.use((error, request, response, next) => {
-  response.status(400).end();
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    response.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'ValidationError') {
+    response.status(400).json({ error: error.message });
+  }
+  next(error);
 });
 
 app.use((request, response) => {
