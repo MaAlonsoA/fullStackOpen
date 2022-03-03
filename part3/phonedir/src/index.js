@@ -1,11 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { App } from "./components/App";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { App } from './components/App';
 
-import "./index.css";
+import './index.css';
 
 ReactDOM.render(
-	<App />,
+  // eslint-disable-next-line react/jsx-filename-extension
+  <App />,
 
-	document.getElementById("root")
+  document.getElementById('root'),
 );
