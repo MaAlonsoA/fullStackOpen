@@ -78,12 +78,11 @@ export const App = () => {
 								setPersons(response);
 							})
 							.catch((e) => {
-								messageHandler("error", e.message);
+								messageHandler("error", e.response.data.error,5000);
 							});
 					})
 					.catch((e) => {
-						console.log(e.message)
-						messageHandler("error", `${finded.name} was already deleted `);
+						messageHandler("error", e.response.data.error,5000);
 					});
 			}
 			return;
@@ -92,6 +91,8 @@ export const App = () => {
 		postNewPerson(newEntry).then((response) => {
 			setPersons(persons.concat(response));
 			setNewEntry();
+		}).catch(e=>{
+			messageHandler("error", e.response.data.error,5000);
 		});
 		event.target.reset();
 		setNewEntry();

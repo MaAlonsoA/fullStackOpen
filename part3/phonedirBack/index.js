@@ -62,7 +62,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     name: body.name,
     phoneNumber: body.phoneNumber,
   };
-  Person.findByIdAndUpdate(request.params.id, newPersonInfo).then(() => {
+  Person.findByIdAndUpdate(request.params.id, newPersonInfo, { runValidators: true }).then(() => {
     response.status(200).end();
   }).catch((error) => next(error));
 });
