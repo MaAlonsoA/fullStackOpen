@@ -1,11 +1,11 @@
 import Blog from '../models/blog.models.js';
 
-export const getBlogs = async (request, response) => {
+export const getBlogs = async (request, response, next) => {
   try {
     const blogsFound = await Blog.find({});
     response.json(blogsFound);
   } catch (error) {
-    response.status(404).json();
+    next(error);
   }
 };
 

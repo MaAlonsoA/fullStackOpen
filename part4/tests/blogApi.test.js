@@ -24,16 +24,25 @@ beforeEach(async () => {
   }
 });
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
-});
+describe('blog info', () => {
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+  });
 
-test('all blogs are returned', async () => {
-  const response = await api.get('/api/blogs');
-  expect(response.body).toHaveLength(blogs.length);
+  test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs');
+    expect(response.body).toHaveLength(blogs.length);
+  });
+
+  test('the unique identifier is "id" ', async () => {
+    const content = await Blog.find({});
+    content.forEach((elem) => {
+      expect(elem.id).toBeDefined();
+    });
+  });
 });
 
 afterAll(() => {

@@ -1,3 +1,8 @@
+import supertest from 'supertest';
+import server from '../../index.js';
+
+export const api = supertest(server);
+
 export const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
@@ -58,4 +63,5 @@ export const listWithOneBlog = [
     __v: 0,
   },
 ];
+
 export const empyList = [];
