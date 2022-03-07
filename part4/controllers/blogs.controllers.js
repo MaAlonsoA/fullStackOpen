@@ -9,9 +9,12 @@ export const getBlogs = async (request, response, next) => {
   }
 };
 
-export const postBlog = (request, response) => {
+export const postBlog = async (request, response, next) => {
   const newBlog = new Blog(request.body);
-  newBlog.save().then((blog) => {
-    response.json(blog);
-  });
+  try {
+    const savedBlog = await newBlog.save();
+    response.json(savedBlog);
+  } catch (error) {
+    next(error);
+  }
 };
