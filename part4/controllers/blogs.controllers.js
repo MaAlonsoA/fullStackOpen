@@ -1,9 +1,12 @@
 import Blog from '../models/blog.models.js';
 
-export const getBlogs = (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs);
-  });
+export const getBlogs = async (request, response) => {
+  try {
+    const blogsFound = await Blog.find({});
+    response.json(blogsFound);
+  } catch (error) {
+    response.status(404).json();
+  }
 };
 
 export const postBlog = (request, response) => {
