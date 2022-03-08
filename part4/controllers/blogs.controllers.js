@@ -18,3 +18,12 @@ export const postBlog = async (request, response, next) => {
     next(error);
   }
 };
+
+export const deleteBlog = async (request, response, next) => {
+  try {
+    await Blog.findByIdAndDelete(request.params.id);
+    response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
