@@ -121,6 +121,20 @@ describe('blog API', () => {
         .expect('Content-Type', /application\/json/);
     });
   });
+  describe('DELETE', () => {
+    test('DELETE by id', async () => {
+      const { contents: initialContents } = await getAllContent();
+      const blogToDelete = initialContents[0];
+
+      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+      const { contents: updatedContents } = await getAllContent();
+      expect(updatedContents).toHaveLength(blogs.length - 1);
+
+      const titles = updatedContents.map((elem) => elem.title);
+      expect(titles).not.toContain(blogToDelete.title);
+    });
+  });
 });
 
 afterAll(() => {
