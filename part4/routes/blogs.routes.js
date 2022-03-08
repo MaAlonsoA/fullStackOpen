@@ -5,9 +5,9 @@ import {
 
 const router = Router();
 
-router.get('/api/blogs', getBlogs);
-router.post('/api/blogs', postBlog);
-router.delete('/api/blogs/:id', deleteBlog);
-router.put('/api/blogs/:id', updateBlog);
+router.get('/', getBlogs);
+router.post('/', postBlog);
+router.delete('/:id', deleteBlog);
+router.put('/:id', updateBlog);
 
 export default router;
