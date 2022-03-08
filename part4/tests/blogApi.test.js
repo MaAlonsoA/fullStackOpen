@@ -1,11 +1,9 @@
 import mongoose from 'mongoose';
-import supertest from 'supertest';
 
-import server from '../index.js';
 import Blog from '../models/blog.models.js';
-import { blogs } from './helpers/testHelpers.js';
-
-const api = supertest(server);
+import {
+  blogs, api, getAllContent, closeServer,
+} from './helpers/testHelpers.js';
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -33,20 +31,22 @@ describe('blog API', () => {
   });
 
   test('GET all blogs', async () => {
-    const response = await api.get('/api/blogs');
-    expect(response.body).toHaveLength(blogs.length);
+    // const response = await api.get('/api/blogs');
+    // const content = response.body.map((elem) => elem);
+    const { contents } = await getAllContent();
+    expect(contents).toHaveLength(blogs.length);
   });
 
   test('the unique identifier is "id" ', async () => {
-    const content = await Blog.find({});
-    content.forEach((elem) => {
+    const { contents } = await getAllContent();
+    contents.forEach((elem) => {
       expect(elem.id).toBeDefined();
     });
   });
 
   test('POST a valid blog', async () => {
     const newBlog = {
-      title: 'Go To Statement Considered Harmful',
+      title: 'Go To Statement Considered Harmful2',
       author: 'Edsger W. Dijkstra',
       url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
       likes: 0,
@@ -56,14 +56,15 @@ describe('blog API', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
-    const response = await api.get('/api/blogs');
-    const titles = response.body.map((elem) => elem.title);
+    const { contents, response } = await getAllContent();
 
+    const titles = contents.map((elem) => elem.title);
     expect(response.body).toHaveLength(blogs.length + 1);
-    expect(titles).toContain('Go To Statement Considered Harmful');
+    expect(titles).toContain(newBlog.title);
   });
 });
 
 afterAll(() => {
   mongoose.connection.close();
+  closeServer();
 });

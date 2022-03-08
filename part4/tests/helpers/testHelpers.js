@@ -3,6 +3,16 @@ import server from '../../index.js';
 
 export const api = supertest(server);
 
+export const closeServer = () => server.close();
+
+export const getAllContent = async () => {
+  const response = await api.get('/api/blogs');
+  return {
+    contents: response.body.map((elem) => elem),
+    response,
+  };
+};
+
 export const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
