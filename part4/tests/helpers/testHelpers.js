@@ -1,12 +1,13 @@
 import supertest from 'supertest';
 import server from '../../index.js';
+import User from '../../models/user.models.js';
 
 export const api = supertest(server);
 
 export const closeServer = () => server.close();
 
 export const getAllContent = async () => {
-  const response = await api.get('/api/blogs');
+  const response = await api.get('/api/blogs/');
   return {
     contents: response.body.map((elem) => elem),
     response,
@@ -63,6 +64,7 @@ export const blogs = [
     __v: 0,
   },
 ];
+
 export const listWithOneBlog = [
   {
     _id: '5a422aa71b54a676234d17f8',
@@ -75,3 +77,8 @@ export const listWithOneBlog = [
 ];
 
 export const empyList = [];
+
+export const getAllUsers = async () => {
+  const usersDB = await User.find({});
+  return usersDB.map((user) => user.toJSON());
+};
