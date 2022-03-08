@@ -135,6 +135,20 @@ describe('blog API', () => {
       expect(titles).not.toContain(blogToDelete.title);
     });
   });
+  describe('PUT', () => {
+    test('PUT update a note by id', async () => {
+      const { contents: initialContents } = await getAllContent();
+      const blogToUpdate = initialContents[0];
+      blogToUpdate.likes = Math.floor(Math.random() * (20 - 0)) + 0;
+
+      await api.put(
+        `/api/blogs/${blogToUpdate.id}`,
+      ).send(blogToUpdate).expect(200);
+
+      const { contents: updatedContents } = await getAllContent();
+      expect(updatedContents[0].likes).toEqual(blogToUpdate.likes);
+    });
+  });
 });
 
 afterAll(() => {
