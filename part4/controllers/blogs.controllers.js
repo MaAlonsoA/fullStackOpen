@@ -14,11 +14,10 @@ export const getBlogs = async (request, response, next) => {
 
 export const postBlog = async (request, response, next) => {
   const {
-    title, author, url, likes, userId,
+    title, author, url, likes,
   } = request.body;
-
+  const { userId } = request;
   const user = await User.findById(userId);
-
   const newBlog = new Blog({
     title, author, url, likes, user: user.id,
   });
@@ -34,11 +33,20 @@ export const postBlog = async (request, response, next) => {
 };
 
 export const deleteBlog = async (request, response, next) => {
-  try {
-    await Blog.findByIdAndDelete(request.params.id);
-    response.status(204).end();
-  } catch (error) {
-    next(error);
+  const { id } = request.params;
+  const { userId } = request;
+
+  const blogToDelete = await Blog.findById(id);
+
+  if (userId === blogToDelete.user.toString()) {
+    try {
+      await Blog.findByIdAndDelete(request.params.id);
+      response.status(204).end();
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    response.status(401).end();
   }
 };
 
