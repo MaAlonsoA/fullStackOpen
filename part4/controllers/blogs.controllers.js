@@ -27,3 +27,21 @@ export const deleteBlog = async (request, response, next) => {
     next(error);
   }
 };
+
+export const updateBlog = async (request, response, next) => {
+  const { body } = request;
+  const blogToUpdate = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+  };
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blogToUpdate, {
+      new: true, runValidators: true,
+    });
+    response.status(200).json(updatedBlog);
+  } catch (error) {
+    next(error);
+  }
+};
