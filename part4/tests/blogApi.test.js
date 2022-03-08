@@ -82,6 +82,44 @@ describe('blog API', () => {
         if (elem.title === newBlog.title) expect(elem.likes).toBe(0);
       });
     });
+
+    test('POST without tittle return 400', async () => {
+      const newBlog = {
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 0,
+      };
+
+      await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+    });
+    test('POST without autor return 400', async () => {
+      const newBlog = {
+        title: 'Go To Statement Considered Harmful2',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 0,
+      };
+
+      await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+    });
+
+    test('POST without url return 400', async () => {
+      const newBlog = {
+        title: 'Go To Statement Considered Harmful2',
+        author: 'Edsger W. Dijkstra',
+        likes: 0,
+      };
+
+      await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+    });
   });
 });
 
