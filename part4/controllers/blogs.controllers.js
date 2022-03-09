@@ -25,13 +25,7 @@ export const postBlog = async (request, response, next) => {
 
   try {
     const savedBlog = await newBlog.save();
-
-    const user = await User.findById(userId);
-
-    const updatedBlogsReferences = user.blogs.concat(savedBlog.id);
-
-    await User.findByIdAndUpdate(userId, { blogs: updatedBlogsReferences });
-
+    await User.findByIdAndUpdate(userId, { $push: { blogs: savedBlog.id } });
     response.json(savedBlog);
   } catch (error) {
     next(error);
