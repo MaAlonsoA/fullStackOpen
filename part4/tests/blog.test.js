@@ -1,12 +1,38 @@
 import mongoose from 'mongoose';
 
 import Blog from '../models/blog.models.js';
+import User from '../models/user.models.js';
+import * as logger from '../utils/logger.js';
 import {
   blogs, api, getAllContent, closeServer,
 } from './helpers/testHelpers.js';
 
+let headers = {};
+
 beforeEach(async () => {
-  await Blog.deleteMany({});
+  try {
+    await User.deleteMany({});
+    await Blog.deleteMany({});
+  } catch (error) {
+    logger.error(error);
+  }
+  const newUser = {
+    userName: 'root',
+    password: '1234556',
+    name: 'Marcos',
+  };
+
+  await api
+    .post('/api/users')
+    .send(newUser);
+
+  const result = await api
+    .post('/api/login')
+    .send(newUser);
+
+  headers = {
+    Authorization: `bearer ${result.body.token}`,
+  };
 
   // parallel
   // const blogObjects = blogs.map((elem) => new Blog(elem));
@@ -16,9 +42,12 @@ beforeEach(async () => {
   // sequential
   // eslint-disable-next-line no-restricted-syntax
   for (const elem of blogs) {
-    const newBlog = new Blog(elem);
     // eslint-disable-next-line no-await-in-loop
-    await newBlog.save();
+    await api.post('/api/blogs')
+      .send(elem)
+      .set(headers)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
   }
 });
 
@@ -29,6 +58,7 @@ describe('blog API', () => {
       expect(elem.id).toBeDefined();
     });
   });
+
   describe('GET', () => {
     test('GET blogs as json', async () => {
       await api
@@ -44,6 +74,7 @@ describe('blog API', () => {
       expect(contents).toHaveLength(blogs.length);
     });
   });
+
   describe('POST', () => {
     test('POST a valid blog', async () => {
       const newBlog = {
@@ -54,6 +85,7 @@ describe('blog API', () => {
       };
       await api.post('/api/blogs')
         .send(newBlog)
+        .set(headers)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -73,6 +105,7 @@ describe('blog API', () => {
 
       await api.post('/api/blogs')
         .send(newBlog)
+        .set(headers)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -92,9 +125,11 @@ describe('blog API', () => {
 
       await api.post('/api/blogs')
         .send(newBlog)
+        .set(headers)
         .expect(400)
         .expect('Content-Type', /application\/json/);
     });
+
     test('POST without autor return 400', async () => {
       const newBlog = {
         title: 'Go To Statement Considered Harmful2',
@@ -104,6 +139,7 @@ describe('blog API', () => {
 
       await api.post('/api/blogs')
         .send(newBlog)
+        .set(headers)
         .expect(400)
         .expect('Content-Type', /application\/json/);
     });
@@ -117,6 +153,7 @@ describe('blog API', () => {
 
       await api.post('/api/blogs')
         .send(newBlog)
+        .set(headers)
         .expect(400)
         .expect('Content-Type', /application\/json/);
     });
@@ -126,7 +163,9 @@ describe('blog API', () => {
       const { contents: initialContents } = await getAllContent();
       const blogToDelete = initialContents[0];
 
-      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+      await api.delete(`/api/blogs/${blogToDelete.id}`)
+        .set(headers)
+        .expect(204);
 
       const { contents: updatedContents } = await getAllContent();
       expect(updatedContents).toHaveLength(blogs.length - 1);
@@ -143,7 +182,9 @@ describe('blog API', () => {
 
       await api.put(
         `/api/blogs/${blogToUpdate.id}`,
-      ).send(blogToUpdate).expect(200);
+      ).send(blogToUpdate)
+        .set(headers)
+        .expect(200);
 
       const { contents: updatedContents } = await getAllContent();
       expect(updatedContents[0].likes).toEqual(blogToUpdate.likes);
