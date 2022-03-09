@@ -6,7 +6,7 @@ import uniqueValidator from 'mongoose-unique-validator';
 const userSchema = new mongoose.Schema({
   userName: {
     type: String,
-    // unique: [true, '{VALUE} already exist'],
+    unique: true,
     required: true,
     minlength: [3, 'User name is to short'],
     maxlength: [9, 'User name is to long'],
@@ -37,6 +37,6 @@ userSchema.set('toJSON', {
   },
 });
 
-// userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator);
 
 export default mongoose.model('User', userSchema);

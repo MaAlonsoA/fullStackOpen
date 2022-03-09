@@ -16,16 +16,22 @@ export const postBlog = async (request, response, next) => {
   const {
     title, author, url, likes,
   } = request.body;
+
   const { userId } = request;
-  const user = await User.findById(userId);
+
   const newBlog = new Blog({
-    title, author, url, likes, user: user.id,
+    title, author, url, likes, user: userId,
   });
 
   try {
     const savedBlog = await newBlog.save();
-    user.blogs = user.blogs.concat(savedBlog.id);
-    await user.save();
+
+    const user = await User.findById(userId);
+
+    const updatedBlogsReferences = user.blogs.concat(savedBlog.id);
+
+    await User.findByIdAndUpdate(userId, { blogs: updatedBlogsReferences });
+
     response.json(savedBlog);
   } catch (error) {
     next(error);
