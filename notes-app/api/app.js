@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('GET request to the homepage');
+  res.status(200).json('GET request to the homepage');
 });
 app.set('port', PORT);
 

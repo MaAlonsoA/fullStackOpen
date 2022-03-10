@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-
-import { api, closeServer } from './helpers/test.helper.js';
-import { getAllUsers, initUsers } from './helpers/user.helper.js';
+import { api, closeServer } from './helpers/test.helpers.js';
+import { getAllUsers, initialUsers, initUsers } from './helpers/user.helpers.js';
 
 beforeEach(async () => {
-  initUsers();
+  await initUsers();
 });
 
 describe('GET', () => {
@@ -16,10 +15,9 @@ describe('GET', () => {
 
   test('GET all users', async () => {
     const usersInDb = await getAllUsers();
-    expect(usersInDb).toHaveLength(1);
+    expect(usersInDb).toHaveLength(initialUsers.length);
   });
 });
-
 afterAll(() => {
   mongoose.connection.close();
   closeServer();
