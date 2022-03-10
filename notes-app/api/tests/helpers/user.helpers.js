@@ -5,7 +5,7 @@ import User from '../../models/user.models.js';
 
 export const initialUsers = [
   {
-    username: 'root1',
+    username: 'root',
     name: 'Marcos',
     password: 'eladmin',
   },
@@ -30,6 +30,9 @@ export const initUsers = async () => {
 };
 
 export const getAllUsers = async () => {
-  const usersInDb = await api.get('/api/users');
-  return usersInDb.body.map((elem) => elem);
+  const response = await api.get('/api/users');
+  return {
+    response,
+    usernames: response.body.map((user) => user.username),
+  };
 };
