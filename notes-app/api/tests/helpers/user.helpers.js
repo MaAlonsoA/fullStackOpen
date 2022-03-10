@@ -31,5 +31,5 @@ export const initUsers = async () => {
 
 export const getAllUsers = async () => {
   const usersInDb = await api.get('/api/users');
-  return usersInDb.map((elem) => elem.toJSON());
+  return usersInDb.body.map((elem) => elem);
 };
