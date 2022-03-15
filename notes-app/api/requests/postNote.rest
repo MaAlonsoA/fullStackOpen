@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/notes
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJvb3QiLCJ1c2VyIjoiNjIzMGVkMDFlYTViNjA2NzI4NmIyYTcwIiwiaWF0IjoxNjQ3MzczNTczfQ.Idpffg3eQsXPrj69YiZmamt3F2ml01L8CVVBtZONzjY
+
+{
+    "content": "Nota va32322lida",
+    "important": true
+}
