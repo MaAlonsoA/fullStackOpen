@@ -4,8 +4,8 @@ const ERROR_HANDLERS = {
   CastError: (response) => response.status(400).send({ error: 'malformatted id' }),
   ValidationError: (response, error) => response.status(400).json({ error: error.message }),
   JsonWebTokenError: (response) => response.status(401).json({ error: 'invalid token' }),
+  InvalidLogin: (response, error) => response.status(401).json({ error: error.message }),
   defaultError: (res, error) => {
-    logger.error('dad', error);
     res.status(500).json(error);
   },
 };
@@ -31,7 +31,7 @@ export const unknownEndpoint = (request, response) => {
 };
 
 export const errorHandler = (error, request, response, next) => {
-  logger.error(error.message);
+  logger.error(error.name);
   const handler = ERROR_HANDLERS[error.name] || ERROR_HANDLERS.defaultError;
   handler(response, error, next);
 };
