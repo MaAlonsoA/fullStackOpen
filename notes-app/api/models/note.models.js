@@ -3,9 +3,9 @@
 import mongoose from 'mongoose';
 
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content: { type: String, required: [true, 'content is missing'] },
   date: Date,
-  important: Boolean,
+  important: { type: Boolean, required: [true, 'important is missing'] },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     red: 'User',
