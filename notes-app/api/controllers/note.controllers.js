@@ -9,3 +9,14 @@ export const getNotes = async (req, res, next) => {
     next(e);
   }
 };
+
+export const postNote = async (req, res, next) => {
+  const { content, important } = req.body;
+  const newNote = new Note({ content, important, date: new Date() });
+  try {
+    const savedNote = await newNote.save();
+    res.status(200).json(savedNote);
+  } catch (e) {
+    next(e);
+  }
+};
