@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
     minlength: [3, 'User name is to short'],
     maxlength: [12, 'User name is to long'],
   },
+  notes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Note',
+  }],
 });
 
 userSchema.set('toJSON', {
