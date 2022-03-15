@@ -2,8 +2,25 @@ import mongoose from 'mongoose';
 import { closeServer, api } from './helpers/test.helpers.js';
 import { getAllNotes, initialNotes, initNotes } from './helpers/note.helpers.js';
 
+let headers = {};
+
 beforeEach(async () => {
   await initNotes();
+  const newUser = {
+    username: 'TRoot',
+    password: '1234556',
+    name: 'Marcos',
+  };
+  await api
+    .post('/api/users')
+    .send(newUser);
+
+  const result = await api
+    .post('/api/login')
+    .send(newUser);
+  headers = {
+    Authorization: `bearer ${result.body.token}`,
+  };
 });
 
 describe('GET', () => {
@@ -25,6 +42,7 @@ describe('POST', () => {
 
     await api.post('/api/notes')
       .send(newNote)
+      .set(headers)
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
@@ -38,6 +56,7 @@ describe('POST', () => {
 
     const result = await api.post('/api/notes')
       .send(newNote)
+      .set(headers)
       .expect(400);
 
     expect(result.body.error)
@@ -52,6 +71,7 @@ describe('POST', () => {
 
     const result = await api.post('/api/notes')
       .send(newNote)
+      .set(headers)
       .expect(400);
 
     expect(result.body.error)
