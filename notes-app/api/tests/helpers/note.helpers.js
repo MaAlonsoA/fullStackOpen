@@ -30,6 +30,6 @@ export const getAllNotes = async () => {
   const response = await api.get('/api/notes');
   return {
     response,
-    content: response.body.map((note) => note.content),
+    contents: response.body.map((note) => note.content),
   };
 };

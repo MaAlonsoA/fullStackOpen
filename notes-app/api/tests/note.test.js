@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { closeServer, api } from './helpers/test.helpers.js';
 import { getAllNotes, initialNotes, initNotes } from './helpers/note.helpers.js';
 
-beforeAll(async () => {
+beforeEach(async () => {
   await initNotes();
 });
 
@@ -41,7 +41,7 @@ describe('POST', () => {
       .expect(400);
 
     expect(result.body.error)
-      .toContain('User validation failed: content: content is missing');
+      .toContain('Note validation failed: content: content is missing');
 
     const { response } = await getAllNotes();
     expect(response.body).toHaveLength(initialNotes.length);
@@ -55,7 +55,7 @@ describe('POST', () => {
       .expect(400);
 
     expect(result.body.error)
-      .toContain('User validation failed: important: iimportant is missing');
+      .toContain('Note validation failed: important: important is missing');
 
     const { response, contents } = await getAllNotes();
     expect(response.body).toHaveLength(initialNotes.length);
