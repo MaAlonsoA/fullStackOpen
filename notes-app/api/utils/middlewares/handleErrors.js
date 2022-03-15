@@ -31,7 +31,7 @@ export const unknownEndpoint = (request, response) => {
 };
 
 export const errorHandler = (error, request, response, next) => {
-  logger.error(error.name);
+  logger.error(error.message);
   const handler = ERROR_HANDLERS[error.name] || ERROR_HANDLERS.defaultError;
   handler(response, error, next);
 };
