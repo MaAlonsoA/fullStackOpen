@@ -4,7 +4,10 @@ const ERROR_HANDLERS = {
   CastError: (response) => response.status(400).send({ error: 'malformatted id' }),
   ValidationError: (response, error) => response.status(400).json({ error: error.message }),
   JsonWebTokenError: (response) => response.status(401).json({ error: 'invalid token' }),
-  defaultError: (error, next) => next(error),
+  defaultError: (res, error) => {
+    logger.error('dad', error);
+    res.status(500).json(error);
+  },
 };
 
 export const requestLogger = (request, response, next) => {
