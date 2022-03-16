@@ -10,6 +10,17 @@ export const getNotes = async (req, res, next) => {
   }
 };
 
+export const getNote = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const note = await Note.findById(id).orFail();
+    res.status(200).json(note);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const postNote = async (req, res, next) => {
   const { content, important } = req.body;
   const { userId } = req;

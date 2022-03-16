@@ -21,9 +21,27 @@ describe('GET', () => {
       .expect('Content-Type', /application\/json/);
   });
 
-  test('GET all users', async () => {
+  test('GET all notes', async () => {
     const { response } = await getAllNotes();
     expect(response.body).toHaveLength(initialNotes.length);
+  });
+  test('GET note by id', async () => {
+    const { response: notesInDB } = await getAllNotes();
+    const noteToFind = notesInDB.body[0];
+    const result = await api.get(`/api/notes/${noteToFind.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+    expect(result.body.content).toEqual(notesInDB.body[0].content);
+  });
+  test('GET fails with a proper estatus code and message if id does not exist ', async () => {
+    const { response: notesInDB } = await getAllNotes();
+    const noteToFind = notesInDB.body[0];
+
+    await api.delete(`/api/notes/${noteToFind.id}`)
+      .set(headers);
+
+    await api.get(`/api/notes/${noteToFind.id}`)
+      .expect(404);
   });
 });
 
