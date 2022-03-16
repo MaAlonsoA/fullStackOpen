@@ -139,15 +139,15 @@ describe('DELETE', () => {
 describe('PUT', () => {
   test('PUT a note by Id', async () => {
     const { response: notesInDB } = await getAllNotes();
-    const noteToUpdate = notesInDB[0];
+    const noteToUpdate = notesInDB.body[0];
     noteToUpdate.content = 'Updated';
 
-    await api.put(`api/notes/${noteToUpdate.id}`)
+    await api.put(`/api/notes/${noteToUpdate.id}`)
       .send(noteToUpdate)
       .set(headers)
       .expect(200);
-    const { contents } = await getAllNotes();
-    expect(contents[0].name).toEqual('Updated');
+    const { response: updatedNotes } = await getAllNotes();
+    expect(updatedNotes.body[0].content).toEqual('Updated');
   });
   test('PUT fails with a proper estatus code and message if id does not exist ', async () => {
     const { response: notesInDB } = await getAllNotes();
@@ -156,7 +156,7 @@ describe('PUT', () => {
     await api.delete(`/api/notes/${noteToUpdate.id}`)
       .set(headers);
 
-    await api.put(`api/notes/${noteToUpdate.id}`)
+    await api.put(`/api/notes/${noteToUpdate.id}`)
       .send(noteToUpdate)
       .set(headers)
       .expect(404);
