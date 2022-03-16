@@ -23,7 +23,7 @@ export const getLogin = async (request, response, next) => {
 
     response.send({
       name: user.name,
-      userName: user.userName,
+      username: user.username,
       token,
     });
   } catch (error) {
