@@ -23,6 +23,7 @@
     "rules": {
         "linebreak-style": 0,
         "no-console": 1,
-        "import/extensions": 0
+        "import/extensions": 0,
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
     }
 }
