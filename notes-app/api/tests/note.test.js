@@ -11,7 +11,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  await initNotes();
+  await initNotes(headers);
 });
 
 describe('GET', () => {
@@ -94,6 +94,7 @@ describe('POST', () => {
       .toContain('jwt must be provided');
   });
 });
+
 afterAll(() => {
   mongoose.connection.close();
   closeServer();

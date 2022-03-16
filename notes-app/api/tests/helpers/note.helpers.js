@@ -39,12 +39,13 @@ export const loginInitTestUser = async () => {
   };
 };
 
-export const initNotes = async () => {
+export const initNotes = async (headers) => {
   await wipeNotes();
   // eslint-disable-next-line no-restricted-syntax
   for await (const elem of initialNotes) {
-    const newNote = new Note(elem);
-    await newNote.save();
+    await api.post('/api/notes')
+      .set(headers)
+      .send(elem);
   }
 };
 
