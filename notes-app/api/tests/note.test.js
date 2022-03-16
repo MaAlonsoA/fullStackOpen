@@ -73,7 +73,7 @@ describe('POST', () => {
     expect(contents).not.toContain(newNote.content);
   });
 
-  test('POST ails with a proper status code and message if JWT is missing', async () => {
+  test('POST fails with a proper status code and message if JWT is missing', async () => {
     const newNote = { content: 'A valid Note without jwt', important: true };
 
     const result = await api.post('/api/notes')
@@ -83,12 +83,12 @@ describe('POST', () => {
       .toContain('jwt must be provided');
   });
 
-  test('POST ails with a proper status code and message if JWT is malformed', async () => {
+  test('POST fails with a proper status code and message if JWT is malformed', async () => {
     const newNote = { content: 'A valid Note without jwt', important: true };
-    headers = { Authorization: 'dwadawd' };
+    const badHeaders = { Authorization: 'dwadawd' };
     const result = await api.post('/api/notes')
       .send(newNote)
-      .set(headers)
+      .set(badHeaders)
       .expect(401);
     expect(result.body.error)
       .toContain('jwt must be provided');
