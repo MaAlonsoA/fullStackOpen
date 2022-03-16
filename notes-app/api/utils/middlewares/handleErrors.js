@@ -5,6 +5,7 @@ const ERROR_HANDLERS = {
   ValidationError: (response, error) => response.status(400).json({ error: error.message }),
   JsonWebTokenError: (response, error) => response.status(401).json({ error: error.message }),
   InvalidLogin: (response, error) => response.status(401).json({ error: error.message }),
+  DocumentNotFoundError: (response) => response.status(404).json({ error: 'Note not found' }),
   defaultError: (res, error) => {
     res.status(500).json(error);
   },
