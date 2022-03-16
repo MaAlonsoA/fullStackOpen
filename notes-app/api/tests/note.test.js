@@ -95,6 +95,46 @@ describe('POST', () => {
   });
 });
 
+describe('DELETE', () => {
+  test('DELETE a note by id', async () => {
+    const { response: notesInDB } = await getAllNotes();
+    const noteToDelete = notesInDB.body[0];
+
+    await api.delete(`/api/notes/${noteToDelete.id}`)
+      .set(headers)
+      .expect(200);
+  });
+  test('DELETE fails with a proper estatus code and message if id does not exist ', async () => {
+    const { response: notesInDB } = await getAllNotes();
+    const notesToDelete = notesInDB.body[0];
+
+    await api.delete(`/api/notes/${notesToDelete.id}`);
+    // try to delete again. This time the id does not exist because is already deleted
+    const result = await api.delete(`/api/notes/${notesToDelete.id}`)
+      .set(headers)
+      .expect(404);
+    expect(result.body.error).toContain('Note not found');
+  });
+  test('DELETE fails with a proper estatus code and message if JWT is missing', async () => {
+    const { response: notesInDB } = await getAllNotes();
+    const notesToDelete = notesInDB.body[0];
+
+    const result = await api.delete(`/api/notes/${notesToDelete.id}`)
+      .expect(401);
+    expect(result.body.error).toContain('jwt must be provided');
+  });
+  test('DELETE fails with a proper estatus code and message if JWT is malformed', async () => {
+    const { response: notesInDB } = await getAllNotes();
+    const notesToDelete = notesInDB.body[0];
+
+    const badHeaders = { Authorization: 'dwadawd' };
+    const result = await api.delete(`/api/notes/${notesToDelete.id}`)
+      .set(badHeaders)
+      .expect(401);
+    expect(result.body.error).toContain('jwt must be provided');
+  });
+});
+
 afterAll(() => {
   mongoose.connection.close();
   closeServer();
