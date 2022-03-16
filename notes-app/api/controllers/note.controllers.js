@@ -3,7 +3,7 @@ import User from '../models/user.models.js';
 
 export const getNotes = async (req, res, next) => {
   try {
-    const notesFound = await Note.find({});
+    const notesFound = await Note.find({}).populate('user', { name: 1 }).orFail();
     res.status(200).json(notesFound);
   } catch (e) {
     next(e);
@@ -14,7 +14,7 @@ export const getNote = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const note = await Note.findById(id).orFail();
+    const note = await Note.findById(id).populate('user').orFail();
     res.status(200).json(note);
   } catch (error) {
     next(error);

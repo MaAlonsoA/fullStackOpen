@@ -4,7 +4,7 @@ import User from '../models/user.models.js';
 
 export const getUsers = async (req, res, next) => {
   try {
-    const usersFound = await User.find({});
+    const usersFound = await User.find({}).populate('notes', { content: 1, important: 1 }).orFail();
     res.status(200).json(usersFound);
   } catch (e) {
     next(e);
