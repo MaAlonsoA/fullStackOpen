@@ -72,6 +72,27 @@ describe('POST', () => {
     expect(response.body).toHaveLength(initialNotes.length);
     expect(contents).not.toContain(newNote.content);
   });
+
+  test('POST ails with a proper status code and message if JWT is missing', async () => {
+    const newNote = { content: 'A valid Note without jwt', important: true };
+
+    const result = await api.post('/api/notes')
+      .send(newNote)
+      .expect(401);
+    expect(result.body.error)
+      .toContain('jwt must be provided');
+  });
+
+  test('POST ails with a proper status code and message if JWT is malformed', async () => {
+    const newNote = { content: 'A valid Note without jwt', important: true };
+    headers = { Authorization: 'dwadawd' };
+    const result = await api.post('/api/notes')
+      .send(newNote)
+      .set(headers)
+      .expect(401);
+    expect(result.body.error)
+      .toContain('jwt must be provided');
+  });
 });
 afterAll(() => {
   mongoose.connection.close();
