@@ -13,11 +13,13 @@ if (NODE_ENV === 'production') {
 } else if (NODE_ENV === 'test') {
   connectionString = MONGO_DB_URI_TEST;
 }
-
-mongoose.connect(connectionString)
-  .then((result) => {
+const connectDB = async (next) => {
+  try {
+    const result = await mongoose.connect(connectionString);
     logger.info('connected to MongoDB', result.connections[0].name);
-  })
-  .catch((error) => {
-    logger.error('error connecting to MongoDB:', error.message);
-  });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default connectDB;
