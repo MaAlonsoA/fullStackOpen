@@ -1,26 +1,17 @@
 import mongoose from 'mongoose';
 import { closeServer, api } from './helpers/test.helpers.js';
-import { getAllNotes, initialNotes, initNotes } from './helpers/note.helpers.js';
+import {
+  getAllNotes, initialNotes, initNotes, loginInitTestUser,
+} from './helpers/note.helpers.js';
 
 let headers = {};
 
+beforeAll(async () => {
+  headers = await loginInitTestUser();
+});
+
 beforeEach(async () => {
   await initNotes();
-  const newUser = {
-    username: 'TRoot',
-    password: '1234556',
-    name: 'Marcos',
-  };
-  await api
-    .post('/api/users')
-    .send(newUser);
-
-  const result = await api
-    .post('/api/login')
-    .send(newUser);
-  headers = {
-    Authorization: `bearer ${result.body.token}`,
-  };
 });
 
 describe('GET', () => {
