@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import Blog from './components/blog/Blog';
 import Notification from './components/notification/Notification';
+import LoginForm from './components/login/LoginForm';
 
 import { setToken, getAllBlogs, postNewBlog } from './services/blog.service';
 import login from './services/login.service';
@@ -47,7 +48,7 @@ function App() {
     }, time);
   };
 
-  const hanldeLogin = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
     try {
       const loggedUser = await login({ username, password });
@@ -75,28 +76,6 @@ function App() {
       messageHandler('error', error.message, 5000);
     }
   };
-
-  const renderLoginForm = () => (
-    <div>
-      <form autoComplete="off" onSubmit={hanldeLogin}>
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          placeholder="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          placeholder="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  );
 
   const handleLogout = () => {
     setUser(null);
@@ -158,7 +137,15 @@ function App() {
         )}
       </div>
       <div>
-        {user === null ? renderLoginForm() : renderBlogs() }
+        {user === null ? (
+          <LoginForm
+            handleSubmit={handleLogin}
+            username={username}
+            password={password}
+            setUsername={({ target }) => setUsername(target.value)}
+            setPassword={({ target }) => setPassword(target.value)}
+          />
+        ) : renderBlogs() }
         {user !== null && renderNewBlogForm() }
       </div>
 
