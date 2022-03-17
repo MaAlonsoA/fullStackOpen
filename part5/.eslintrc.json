@@ -5,7 +5,8 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "airbnb"
+        "airbnb",
+        "plugin:react/jsx-runtime"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -21,7 +22,6 @@
         "linebreak-style": 0,
         "no-console": 1,
         "import/extensions": 0,
-        "import/prefer-default-export": "off",
-        "react/prop-types": "off"
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
     }
 }
