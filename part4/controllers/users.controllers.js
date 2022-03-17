@@ -21,7 +21,7 @@ export const postUser = async (request, response, next) => {
   if (body.password.length < 3) response.status(400).json({ error: 'User validation failed: password: password is to short' });
 
   const newUser = new User({
-    userName: body.userName,
+    username: body.username,
     password: passWordHash,
     name: body.name,
   });

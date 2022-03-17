@@ -6,9 +6,9 @@ import User from '../models/user.models.js';
 // eslint-disable-next-line import/prefer-default-export
 export const getLogin = async (request, response) => {
   const { body } = request;
-  const { userName, password } = body;
+  const { username, password } = body;
 
-  const user = await User.findOne({ userName });
+  const user = await User.findOne({ username });
 
   const passwordIsCorrect = user === null
     ? false
@@ -19,7 +19,7 @@ export const getLogin = async (request, response) => {
   }
 
   const userForToken = {
-    userName: user.userName,
+    username: user.username,
     // eslint-disable-next-line no-underscore-dangle
     user: user._id,
   };
@@ -28,7 +28,7 @@ export const getLogin = async (request, response) => {
 
   return response.send({
     name: user.name,
-    userName: user.userName,
+    username: user.username,
     token,
   });
 };

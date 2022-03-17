@@ -17,7 +17,7 @@ beforeEach(async () => {
     logger.error(error);
   }
   const newUser = {
-    userName: 'root',
+    username: 'root',
     password: '1234556',
     name: 'Marcos',
   };

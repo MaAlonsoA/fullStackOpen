@@ -8,7 +8,7 @@ beforeEach(async () => {
   await User.deleteMany({});
 
   const passWordHash = await bcrypt.hash('pswd', 10);
-  const user = new User({ userName: 'root', password: passWordHash, name: 'Marcos' });
+  const user = new User({ username: 'root', password: passWordHash, name: 'Marcos' });
   await user.save();
 });
 
@@ -30,7 +30,7 @@ describe('POST', () => {
     const initialUsers = await getAllUsers();
 
     const newUser = {
-      userName: 'Notroot',
+      username: 'Notroot',
       password: '123456',
       name: 'Marcos',
     };
@@ -43,15 +43,15 @@ describe('POST', () => {
     const updatedUsers = await getAllUsers();
     expect(updatedUsers).toHaveLength(initialUsers.length + 1);
 
-    const userNames = updatedUsers.map((elem) => elem.userName);
-    expect(userNames).toContain(newUser.userName);
+    const usernames = updatedUsers.map((elem) => elem.username);
+    expect(usernames).toContain(newUser.username);
   });
 
   test('creation fails with proper statuscode and message if user is already taken', async () => {
     const initialUsers = await getAllUsers();
 
     const newUser = {
-      userName: 'root',
+      username: 'root',
       password: '123456',
       name: 'Marcos',
     };
@@ -61,7 +61,7 @@ describe('POST', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
     expect(result.body.error)
-      .toContain('User validation failed: userName: Error, expected `userName` to be unique. Value: `root`');
+      .toContain('User validation failed: username: Error, expected `username` to be unique. Value: `root`');
 
     const updatedUsers = await getAllUsers();
     expect(updatedUsers).toHaveLength(initialUsers.length);
@@ -71,7 +71,7 @@ describe('POST', () => {
     const initialUsers = await getAllUsers();
 
     const newUser = {
-      userName: 'ro',
+      username: 'ro',
       password: '123456',
       name: 'Marcos',
     };
@@ -82,7 +82,7 @@ describe('POST', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(result.body.error)
-      .toContain('User validation failed: userName: User name is to short');
+      .toContain('User validation failed: username: User name is to short');
 
     const updatedUsers = await getAllUsers();
     expect(updatedUsers).toHaveLength(initialUsers.length);
@@ -91,7 +91,7 @@ describe('POST', () => {
     const initialUsers = await getAllUsers();
 
     const newUser = {
-      userName: 'ror',
+      username: 'ror',
       password: '12',
       name: 'Marcos',
     };
