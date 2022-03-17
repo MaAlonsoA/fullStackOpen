@@ -18,15 +18,16 @@ describe('GET', () => {
   test('GET notes as JSON', async () => {
     await api.get('/api/notes')
       .expect(200)
+      .set(headers)
       .expect('Content-Type', /application\/json/);
   });
 
   test('GET all notes', async () => {
-    const { response } = await getAllNotes();
+    const { response } = await getAllNotes(headers);
     expect(response.body).toHaveLength(initialNotes.length);
   });
   test('GET note by id', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const noteToFind = notesInDB.body[0];
     const result = await api.get(`/api/notes/${noteToFind.id}`)
       .expect(200)
@@ -34,7 +35,7 @@ describe('GET', () => {
     expect(result.body.content).toEqual(notesInDB.body[0].content);
   });
   test('GET fails with a proper estatus code and message if id does not exist ', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const noteToFind = notesInDB.body[0];
 
     await api.delete(`/api/notes/${noteToFind.id}`)
@@ -55,7 +56,7 @@ describe('POST', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
-    const { response, contents } = await getAllNotes();
+    const { response, contents } = await getAllNotes(headers);
     expect(response.body).toHaveLength(initialNotes.length + 1);
     expect(contents).toContain(newNote.content);
   });
@@ -71,7 +72,7 @@ describe('POST', () => {
     expect(result.body.error)
       .toContain('Note validation failed: content: content is missing');
 
-    const { response } = await getAllNotes();
+    const { response } = await getAllNotes(headers);
     expect(response.body).toHaveLength(initialNotes.length);
   });
 
@@ -86,7 +87,7 @@ describe('POST', () => {
     expect(result.body.error)
       .toContain('Note validation failed: important: important is missing');
 
-    const { response, contents } = await getAllNotes();
+    const { response, contents } = await getAllNotes(headers);
     expect(response.body).toHaveLength(initialNotes.length);
     expect(contents).not.toContain(newNote.content);
   });
@@ -115,7 +116,7 @@ describe('POST', () => {
 
 describe('DELETE', () => {
   test('DELETE a note by id', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const noteToDelete = notesInDB.body[0];
 
     await api.delete(`/api/notes/${noteToDelete.id}`)
@@ -123,7 +124,7 @@ describe('DELETE', () => {
       .expect(200);
   });
   test('DELETE fails with a proper estatus code and message if id does not exist ', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const notesToDelete = notesInDB.body[0];
 
     await api.delete(`/api/notes/${notesToDelete.id}`)
@@ -135,7 +136,7 @@ describe('DELETE', () => {
     expect(result.body.error).toContain('Note not found');
   });
   test('DELETE fails with a proper estatus code and message if JWT is missing', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const notesToDelete = notesInDB.body[0];
 
     const result = await api.delete(`/api/notes/${notesToDelete.id}`)
@@ -143,7 +144,7 @@ describe('DELETE', () => {
     expect(result.body.error).toContain('jwt must be provided');
   });
   test('DELETE fails with a proper estatus code and message if JWT is malformed', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const notesToDelete = notesInDB.body[0];
 
     const badHeaders = { Authorization: 'dwadawd' };
@@ -156,7 +157,7 @@ describe('DELETE', () => {
 
 describe('PUT', () => {
   test('PUT a note by Id', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const noteToUpdate = notesInDB.body[0];
     noteToUpdate.content = 'Updated';
 
@@ -164,11 +165,11 @@ describe('PUT', () => {
       .send(noteToUpdate)
       .set(headers)
       .expect(200);
-    const { response: updatedNotes } = await getAllNotes();
+    const { response: updatedNotes } = await getAllNotes(headers);
     expect(updatedNotes.body[0].content).toEqual('Updated');
   });
   test('PUT fails with a proper estatus code and message if id does not exist ', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const noteToUpdate = notesInDB.body[0];
 
     await api.delete(`/api/notes/${noteToUpdate.id}`)
@@ -180,7 +181,7 @@ describe('PUT', () => {
       .expect(404);
   });
   test('PUT fails with a proper estatus code and message if JWT is missing', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const noteToUpdate = notesInDB.body[0];
 
     const result = await api.put(`/api/notes/${noteToUpdate.id}`)
@@ -188,7 +189,7 @@ describe('PUT', () => {
     expect(result.body.error).toContain('jwt must be provided');
   });
   test('PUT fails with a proper estatus code and message if JWT is malformed', async () => {
-    const { response: notesInDB } = await getAllNotes();
+    const { response: notesInDB } = await getAllNotes(headers);
     const noteToUpdate = notesInDB.body[0];
 
     const badHeaders = { Authorization: 'dwadawd' };

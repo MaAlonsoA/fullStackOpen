@@ -7,7 +7,7 @@ import userExtractor from '../utils/middlewares/userExtractor.js';
 
 const router = Router();
 
-router.get('/', getNotes);
+router.get('/', userExtractor, getNotes);
 router.get('/:id', getNote);
 router.post('/', userExtractor, postNote);
 router.delete('/:id', userExtractor, deleteNote);

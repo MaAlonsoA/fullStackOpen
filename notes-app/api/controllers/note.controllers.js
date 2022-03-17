@@ -2,8 +2,9 @@ import Note from '../models/note.models.js';
 import User from '../models/user.models.js';
 
 export const getNotes = async (req, res, next) => {
+  const { userId } = req;
   try {
-    const notesFound = await Note.find({}).populate('user', { name: 1 }).orFail();
+    const notesFound = await Note.find({ user: { _id: userId } }).populate('user', { name: 1 }).orFail();
     res.status(200).json(notesFound);
   } catch (e) {
     next(e);
@@ -29,11 +30,7 @@ export const postNote = async (req, res, next) => {
   });
 
   try {
-    // const person = await User.findById(userId);
-    if (!await User.findById(userId)) {
-      const errorMessage = { name: 'InvalidUserId', message: 'UserId not found' };
-      throw errorMessage;
-    }
+    await User.findById(userId).orFail();
     const savedNote = await newNote.save();
     await User.findByIdAndUpdate(userId, { $push: { notes: savedNote.id } });
     res.status(200).json(savedNote);

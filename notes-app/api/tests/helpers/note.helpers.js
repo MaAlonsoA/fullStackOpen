@@ -49,8 +49,8 @@ export const initNotes = async (headers) => {
   }
 };
 
-export const getAllNotes = async () => {
-  const response = await api.get('/api/notes');
+export const getAllNotes = async (headers) => {
+  const response = await api.get('/api/notes').set(headers);
   return {
     response,
     contents: response.body.map((note) => note.content),
