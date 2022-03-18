@@ -16,6 +16,16 @@ function App() {
   const [notification, setNotification] = useState({ type: '', message: '' });
   const [user, setUser] = useState(null);
 
+  useEffect(async () => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser');
+    if (loggedUserJSON) {
+      const loggedUser = JSON.parse(loggedUserJSON);
+      setUser(loggedUser);
+      setToken(loggedUser.token);
+      setNotes(await getAllNotes());
+    }
+  }, []);
+
   const messageHandler = (type, message, time = 3000) => {
     setNotification({
       type,
@@ -28,20 +38,6 @@ function App() {
       });
     }, time);
   };
-
-  useEffect(async () => {
-    const serverNotes = await getAllNotes();
-    setNotes(serverNotes);
-  }, []);
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser');
-    if (loggedUserJSON) {
-      const loggedUser = JSON.parse(loggedUserJSON);
-      setUser(loggedUser);
-      setToken(loggedUser.token);
-    }
-  }, []);
 
   const handleLogout = () => {
     setUser(null);
@@ -77,6 +73,7 @@ function App() {
       setToken(loggedUser.token);
       window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(loggedUser));
       messageHandler('success', 'Correct login');
+      setNotes(await getAllNotes());
     } catch (error) {
       messageHandler('error', 'invalid user or password', 5000);
     }

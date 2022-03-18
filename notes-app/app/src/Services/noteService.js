@@ -5,7 +5,10 @@ export const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 export async function getAllNotes() {
-  const { data } = await axios.get('http://localhost:3001/api/notes');
+  const config = {
+    headers: { Authorization: token },
+  };
+  const { data } = await axios.get('http://localhost:3001/api/notes', config);
   return data;
 }
 
