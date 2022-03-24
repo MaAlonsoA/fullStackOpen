@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 
 import Blogs from './components/blog/Blogs';
 import Notification from './components/notification/Notification';
+import BlogForm from './components/blog/BlogForm';
 import LoginForm from './components/login/LoginForm';
-
 import { setToken, getAllBlogs, postNewBlog } from './services/blog.service';
 import login from './services/login.service';
 
@@ -17,10 +17,6 @@ function App() {
   const [password, setPassword] = useState('');
 
   const [notification, setNotification] = useState({ type: '', message: '' });
-
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
 
   useEffect(async () => {
     setBlogs(await getAllBlogs());
@@ -64,13 +60,9 @@ function App() {
     }
   };
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault();
+  const setNewBlog = async (newBlog) => {
     try {
-      await postNewBlog({ title, author, url });
-      setAuthor('');
-      setUrl('');
-      setTitle('');
+      await postNewBlog(newBlog);
       setBlogs(await getAllBlogs());
     } catch (error) {
       messageHandler('error', error.message, 5000);
@@ -82,42 +74,6 @@ function App() {
     setToken(null);
     window.localStorage.removeItem('loggedBlogsUser');
   };
-
-  const renderNewBlogForm = () => (
-    <div>
-      <h2>New Blog</h2>
-      <form onSubmit={handleNewBlog} autoComplete="off">
-        <div>
-          <input
-            type="text"
-            value={title}
-            name="title"
-            placeholder="title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            value={author}
-            name="author"
-            placeholder="author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            value={url}
-            name="url"
-            placeholder="url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">add</button>
-      </form>
-    </div>
-  );
 
   return (
     <div>
@@ -139,7 +95,9 @@ function App() {
         {user !== null && (
           <div>
             <Blogs blogsToRender={blogs} />
-            {renderNewBlogForm()}
+            <BlogForm
+              setNewBlog={setNewBlog}
+            />
           </div>
         ) }
 
