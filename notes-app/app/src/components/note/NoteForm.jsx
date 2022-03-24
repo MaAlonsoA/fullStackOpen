@@ -8,7 +8,7 @@ export default function NoteForm({ addNote }) {
     setNewNote(target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const noteObject = {
       content: newNote,
