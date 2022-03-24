@@ -6,8 +6,10 @@ function LoginForm({ login }) {
   const [password, setPassword] = useState('');
 
   const handleSubmit = (event) => {
-    event.prreventDefault();
+    event.preventDefault();
     login({ username, password });
+    setUsername('');
+    setPassword('');
   };
   return (
     <div>
