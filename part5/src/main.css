@@ -1,12 +1,9 @@
-h1 {
+h2 {
   color: green;
   font-style: italic;
 }
-
-.note {
-  color: grey;
-  padding-top: 5px;
-  font-size: 15px;
+body {
+	background-color: lightgrey;
 }
 
 .error {
@@ -27,4 +24,18 @@ h1 {
 	border-radius: 5px;
 	padding: 10px;
 	margin-bottom: 10px;
+}
+
+.blog {
+	background: lightblue;
+	padding-top: 10px;
+	padding-left: 2px;
+	border: solid;
+	border-width: 1px;
+	margin-bottom: 5px;
+}
+.blogList {
+	width: 40%;
+	background-color: rgba(173, 216, 230, 0.589);
+	align-self: center;
 }
