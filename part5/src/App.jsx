@@ -12,7 +12,6 @@ import './main.css';
 function App() {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-
   const [notification, setNotification] = useState({ type: '', message: '' });
 
   useEffect(async () => {
@@ -53,6 +52,12 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    setUser(null);
+    setToken(null);
+    window.localStorage.removeItem('loggedBlogsUser');
+  };
+
   const setNewBlog = async (newBlog) => {
     try {
       await postNewBlog(newBlog);
@@ -60,12 +65,6 @@ function App() {
     } catch (error) {
       messageHandler('error', error.message, 5000);
     }
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setToken(null);
-    window.localStorage.removeItem('loggedBlogsUser');
   };
 
   return (
