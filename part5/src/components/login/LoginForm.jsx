@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import Toggable from '../toggable/Toggable';
 
 function LoginForm({ login }) {
   const [username, setUsername] = useState('');
@@ -12,7 +13,7 @@ function LoginForm({ login }) {
     setPassword('');
   };
   return (
-    <div>
+    <Toggable buttonLabel="Login">
       <form autoComplete="off" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -30,7 +31,8 @@ function LoginForm({ login }) {
         />
         <button type="submit">Login</button>
       </form>
-    </div>
+    </Toggable>
+
   );
 }
 

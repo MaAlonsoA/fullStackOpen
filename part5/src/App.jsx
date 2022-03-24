@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Blogs from './components/blog/Blogs';
 import Notification from './components/notification/Notification';
@@ -8,11 +8,14 @@ import { setToken, getAllBlogs, postNewBlog } from './services/blog.service';
 import login from './services/login.service';
 
 import './main.css';
+import Toggable from './components/toggable/Toggable';
 
 function App() {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState({ type: '', message: '' });
+
+  const toggableRef = useRef();
 
   useEffect(async () => {
     setBlogs(await getAllBlogs());
@@ -59,6 +62,7 @@ function App() {
   };
 
   const setNewBlog = async (newBlog) => {
+    toggableRef.current.toggleVisibility();
     try {
       await postNewBlog(newBlog);
       setBlogs(await getAllBlogs());
@@ -79,7 +83,10 @@ function App() {
           <>
             <button type="button" onClick={handleLogout}>Logout</button>
             <Blogs blogsToRender={blogs} />
-            <BlogForm setNewBlog={setNewBlog} />
+            <Toggable buttonLabel="New blog" ref={toggableRef}>
+              <BlogForm setNewBlog={setNewBlog} />
+            </Toggable>
+
           </>
         )}
     </>
