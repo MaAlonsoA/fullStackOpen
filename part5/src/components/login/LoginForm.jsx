@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-function LoginForm({
-  handleSubmit,
-  username,
-  setUsername,
-  setPassword,
-  password,
-}) {
+function LoginForm({ login }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (event) => {
+    event.prreventDefault();
+    login({ username, password });
+    setUsername('');
+    setPassword('');
+  };
   return (
     <div>
       <form autoComplete="off" onSubmit={handleSubmit}>
@@ -15,14 +19,14 @@ function LoginForm({
           value={username}
           name="Username"
           placeholder="Username"
-          onChange={setUsername}
+          onChange={({ target }) => setUsername(target.value)}
         />
         <input
           type="password"
           value={password}
           name="Password"
           placeholder="Password"
-          onChange={setPassword}
+          onChange={({ target }) => setPassword(target.value)}
         />
         <button type="submit">Login</button>
       </form>
@@ -31,11 +35,7 @@ function LoginForm({
 }
 
 LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  setPassword: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
