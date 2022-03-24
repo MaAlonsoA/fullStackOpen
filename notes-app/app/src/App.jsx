@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import Notification from './components/notification/Notification';
 import {
@@ -15,6 +15,8 @@ function App() {
 
   const [notification, setNotification] = useState({ type: '', message: '' });
   const [user, setUser] = useState(null);
+
+  const toggableRef = useRef();
 
   useEffect(async () => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser');
@@ -57,6 +59,7 @@ function App() {
   };
 
   const addNote = async (noteObject) => {
+    toggableRef.current.toggleVisibility();
     try {
       await postNote(noteObject);
       setNotes(await getAllNotes());
@@ -81,13 +84,9 @@ function App() {
 
   return (
     <div>
-
-      <div>
-        { !notification.type ? null : (
-          <Notification type={notification.type} message={notification.message} />
-        )}
-      </div>
-
+      { !notification.type ? null : (
+        <Notification type={notification.type} message={notification.message} />
+      )}
       {user === null
         ? (
           <LoginForm
@@ -102,15 +101,13 @@ function App() {
             notes={notes}
             toggleImportance={toggleImportance}
           />
-          <Toggable buttonLabel="New Note">
+          <Toggable buttonLabel="New Note" ref={toggableRef}>
             <NoteForm
               addNote={addNote}
             />
           </Toggable>
-
         </div>
       )}
-
     </div>
   );
 }
