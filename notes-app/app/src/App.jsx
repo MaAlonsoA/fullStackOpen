@@ -88,12 +88,8 @@ function App() {
         <Notification type={notification.type} message={notification.message} />
       )}
       {user === null
-        ? (
-          <LoginForm
-            login={handleLogin}
-          />
-        )
-        : <div><button type="button" onClick={handleLogout}>Logout</button></div>}
+        ? <LoginForm login={handleLogin} />
+        : <button type="button" onClick={handleLogout}>Logout</button>}
 
       {user !== null && (
         <div>

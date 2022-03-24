@@ -8,8 +8,6 @@ function LoginForm({ login }) {
   const handleSubmit = (event) => {
     event.prreventDefault();
     login({ username, password });
-    setUsername('');
-    setPassword('');
   };
   return (
     <div>

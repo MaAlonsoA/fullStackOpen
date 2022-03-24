@@ -69,22 +69,19 @@ function App() {
 
   return (
     <>
+      { !notification.type
+        ? null
+        : <Notification type={notification.type} message={notification.message} />}
 
-      { !notification.type ? null : (
-        <Notification type={notification.type} message={notification.message} />
-      )}
-
-      {user === null ? (
-        <LoginForm login={handleLogin} />
-      ) : <button type="button" onClick={handleLogout}>Logout</button> }
-
-      {user !== null && (
-      <>
-        <Blogs blogsToRender={blogs} />
-        <BlogForm setNewBlog={setNewBlog} />
-      </>
-      )}
-
+      {user === null
+        ? <LoginForm login={handleLogin} />
+        : (
+          <>
+            <button type="button" onClick={handleLogout}>Logout</button>
+            <Blogs blogsToRender={blogs} />
+            <BlogForm setNewBlog={setNewBlog} />
+          </>
+        )}
     </>
   );
 }
