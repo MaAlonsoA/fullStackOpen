@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import Blog from './components/blog/Blog';
+import Blogs from './components/blog/Blogs';
 import Notification from './components/notification/Notification';
 import LoginForm from './components/login/LoginForm';
 
@@ -83,16 +83,6 @@ function App() {
     window.localStorage.removeItem('loggedBlogsUser');
   };
 
-  const renderBlogs = () => (
-    <div>
-      <div>
-        <h2>blogs</h2>
-        {blogs.map((blog) => <Blog key={blog.id} title={blog.title} author={blog.author} />)}
-      </div>
-      <div><button type="button" onClick={handleLogout}>Logout</button></div>
-    </div>
-  );
-
   const renderNewBlogForm = () => (
     <div>
       <h2>New Blog</h2>
@@ -145,8 +135,14 @@ function App() {
             setUsername={({ target }) => setUsername(target.value)}
             setPassword={({ target }) => setPassword(target.value)}
           />
-        ) : renderBlogs() }
-        {user !== null && renderNewBlogForm() }
+        ) : <button type="button" onClick={handleLogout}>Logout</button> }
+        {user !== null && (
+          <div>
+            <Blogs blogsToRender={blogs} />
+            {renderNewBlogForm()}
+          </div>
+        ) }
+
       </div>
 
     </div>
