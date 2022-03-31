@@ -8,7 +8,7 @@ function Note({ note, toggleImportance }) {
       <li className="note">
         { note.content }
       </li>
-      <input type="checkbox" onChange={toggleImportance} checked={note.important} />
+      <input type="checkbox" data-testid="checkBox" onChange={toggleImportance} checked={note.important} />
       {label}
     </div>
 
